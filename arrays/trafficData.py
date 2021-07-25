@@ -2,7 +2,7 @@
 
 import urllib.request
 import random
-from collections import Counter
+from collections import defaultdict
 
 # Load the data from remote location (URL)
 file = urllib.request.urlopen("http://hci.stanford.edu/courses/cs448b/data/ipasn/cs448b_ipasn.csv", data=None)
@@ -22,31 +22,56 @@ text = f.decode(encoding='utf-8',errors='ignore')
 # Split this single string at the end of lines
 lines = text.split("\n")
 
-# Initalising the dictionary
 trafficData = {}
 
-# Filling the dictionary
 id = 0
 print(str(len(lines)) + " rows of data to load")
 
 for line in lines:
   if line == "":
     id += 1
+  elif id == 0: #skip the header
+    id += 1
   else:
-    l = line.strip().split(",")
-    #print(id)  
-    trafficData[id] = {"date" : l[0], "local_ipn" : l[1], "remote_asn" : l[2], "flows" : l[3]}  
+    column = line.strip().split(",")
+    trafficData[id] = {"date" : column[0], "local_ipn" : column[1], "remote_asn" : column[2], "flows" : column[3]}  
     id += 1
   
 print(str(id) + " rows loaded")
 # Take a random key from the dictionary and print its value
 print(trafficData[random.choice(list(trafficData.keys()))])
 
+p = 1
+while(p <= len(lines)-2 ):
+  #print(trafficData[p(list(trafficData.keys()))])
+  print(trafficData[p])
+  p +=1
+
 # get some stats on this data
 # this isn't doing anything valuable yet, i'm not sure what it's doing
-sum(value == 0 for value in trafficData.values())
-
+# sum(value == 0 for value in trafficData.keys())
 
 # todo
 # create something to group by host + asn and sort by number of flows per day
 # analyze to determine the date that each host saw a big increase in flows to a specific asn
+
+local_ipn_freqdict = defaultdict(int)
+remote_asn_freqdict = defaultdict(int)
+combo_freqdict = defaultdict(int)
+for item in trafficData:
+  local_ipn = trafficData[item]["local_ipn"]
+  remote_asn = trafficData[item]["remote_asn"]
+  combo = trafficData[item]["local_ipn"] + trafficData[item]["remote_asn"]
+
+
+  local_ipn_freqdict[local_ipn] += 1
+  remote_asn_freqdict[remote_asn] += 1
+  combo_freqdict[local_ipn, remote_asn] += 1
+
+print(str(len(local_ipn_freqdict)) + " unique local hosts")
+print(str(len(remote_asn_freqdict)) + " unique remote ASNs")
+print(str(len(combo_freqdict)) + " unique local hosts and remote ASNs")
+
+# print(freqdict)
+print(combo_freqdict)
+# s = set( val for dic in trafficData for val in dic.values())

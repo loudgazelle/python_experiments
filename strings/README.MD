@@ -39,3 +39,9 @@ when surrounded by quotes numbers with spaces are handled the same as strings
 $ ./reverse.py '1 2 3 4 5 6 7 8 9 10'
 01 9 8 7 6 5 4 3 2 1
 ```
+
+### URLs too!
+```
+$ ./reverse.py https://github.com/loudgazelle/python_experiments/tree/main/strings
+sgnirts/niam/eert/stnemirepxe_nohtyp/ellezagduol/moc.buhtig//:sptth
+```
